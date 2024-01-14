@@ -1,4 +1,7 @@
 import yfinance as yf
+from get_all_tickers import get_tickers as gt
+from get_all_tickers.get_tickers import Region
+import pandas as pd
 '''
 msft = yf.Ticker("MSFT")
 
@@ -39,3 +42,12 @@ msft = yf.Ticker("MSFT")
 #print(msft.info)
 msft_info = msft.info
 print(msft_info['exDividendDate'])
+
+
+
+# tickers of all exchanges
+tickers = gt.get_tickers()
+print(tickers[:5])
+
+# tickers from NYSE and NASDAQ only
+tickers = gt.get_tickers(AMEX=False)
