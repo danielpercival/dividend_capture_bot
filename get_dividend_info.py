@@ -38,10 +38,32 @@ msft.quarterly_cashflow
 # show news
 msft.news
 '''
+df = pd.read_csv('ticker_list')
+list_of_tickers = list(df['Tickers'])
 
+all_tickers = yf.Tickers(list_of_tickers)
+new_dict = {}
+for i in list_of_tickers[0:10:1]:
+    try:
+        print('the current stock is: ', i)
+        stock = yf.Ticker(i)
+        stock_info = stock.info
+        exDivDateUnix = int(stock_info['exDividendDate'])
+        exDivDate = datetime.utcfromtimestamp(exDivDateUnix).strftime('%d-%m-%Y')
+        new_dict[i] = exDivDate
+    except:
+        pass
+
+
+print(new_dict)
+'''
 msft = yf.Ticker("MSFT")
 #print(msft.info)
 msft_info = msft.info
 print(msft_info['exDividendDate'])
 exDivDateUnix = int(msft_info['exDividendDate'])
 print(datetime.utcfromtimestamp(exDivDateUnix).strftime('%d-%m-%Y'))
+
+all_tickers_info = all_tickers.info
+
+'''
