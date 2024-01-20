@@ -3,6 +3,7 @@ from get_all_tickers import get_tickers as gt
 from get_all_tickers.get_tickers import Region
 import pandas as pd
 from datetime import datetime
+from IPython.display import display
 '''
 msft = yf.Ticker("MSFT")
 
@@ -42,20 +43,33 @@ df = pd.read_csv('ticker_list')
 list_of_tickers = list(df['Tickers'])
 
 all_tickers = yf.Tickers(list_of_tickers)
-new_dict = {}
+dividend_df = pd.DataFrame(columns=['Ticker','Price to Earnings','Dividend Yield','Dividend Date', 'UNIX Div Date'])
+#display(dividend_df)
 for i in list_of_tickers[0:10:1]:
     try:
+        
         print('the current stock is: ', i)
         stock = yf.Ticker(i)
         stock_info = stock.info
         exDivDateUnix = int(stock_info['exDividendDate'])
         exDivDate = datetime.utcfromtimestamp(exDivDateUnix).strftime('%d-%m-%Y')
-        new_dict[i] = exDivDate
+        PE_ratio = stock_info['trailingPE']
+        last_Div_Value = stock_info['lastDividendValue']
+        last_div_date = stock_info['lastDividendDate']
+        payout_ratio = stock_info['payoutRatio']
+        div_yield = stock_info['dividendYield']
+        div_rate = stock_info['dividendRate']
+        data = [[i, PE_ratio, div_yield, exDivDate, exDivDateUnix]]
+        dividend_temp_df = pd.DataFrame(data, columns=['Ticker','Price to Earnings','Dividend Yield','Dividend Date', 'UNIX Div Date'])
+        print('temp div df is: ', dividend_temp_df)
+        dividend_df = pd.concat([dividend_df, dividend_temp_df])
     except:
+        print('there has been a failure')
         pass
 
 
-print(new_dict)
+print('final df is: ', dividend_df)
+display(dividend_df)
 '''
 msft = yf.Ticker("MSFT")
 #print(msft.info)
