@@ -43,24 +43,32 @@ df = pd.read_csv('ticker_list')
 list_of_tickers = list(df['Tickers'])
 
 all_tickers = yf.Tickers(list_of_tickers)
-dividend_df = pd.DataFrame(columns=['Ticker','Price to Earnings','Dividend Yield','Dividend Date', 'UNIX Div Date'])
+dividend_df = pd.DataFrame(columns=['Ticker','Price_to_Earnings','Dividend_Yield','Dividend_Date', 'UNIX_Div_Date'])
 #display(dividend_df)
-for i in list_of_tickers[0:10:1]:
+for i in list_of_tickers:
     try:
         
         print('the current stock is: ', i)
         stock = yf.Ticker(i)
         stock_info = stock.info
-        exDivDateUnix = int(stock_info['exDividendDate'])
-        exDivDate = datetime.utcfromtimestamp(exDivDateUnix).strftime('%d-%m-%Y')
-        PE_ratio = stock_info['trailingPE']
-        last_Div_Value = stock_info['lastDividendValue']
-        last_div_date = stock_info['lastDividendDate']
-        payout_ratio = stock_info['payoutRatio']
-        div_yield = stock_info['dividendYield']
-        div_rate = stock_info['dividendRate']
+        
+        try:
+            PE_ratio = stock_info['trailingPE']
+        except:
+            PE_ratio = 'NULL'
+        try:
+            exDivDateUnix = int(stock_info['exDividendDate'])
+            exDivDate = datetime.utcfromtimestamp(exDivDateUnix).strftime('%d-%m-%Y')
+            last_Div_Value = stock_info['lastDividendValue']
+            last_div_date = stock_info['lastDividendDate']
+            payout_ratio = stock_info['payoutRatio']
+            div_yield = stock_info['dividendYield']
+            div_rate = stock_info['dividendRate']
+        except: 
+            last_Div_Value = last_div_date = payout_ratio = div_yield = div_rate = exDivDateUnix = exDivDate = 'NULL'
+
         data = [[i, PE_ratio, div_yield, exDivDate, exDivDateUnix]]
-        dividend_temp_df = pd.DataFrame(data, columns=['Ticker','Price to Earnings','Dividend Yield','Dividend Date', 'UNIX Div Date'])
+        dividend_temp_df = pd.DataFrame(data, columns=['Ticker','Price_to_Earnings','Dividend_Yield','Dividend_Date', 'UNIX_Div_Date'])
         print('temp div df is: ', dividend_temp_df)
         dividend_df = pd.concat([dividend_df, dividend_temp_df])
     except:
@@ -70,6 +78,7 @@ for i in list_of_tickers[0:10:1]:
 
 print('final df is: ', dividend_df)
 display(dividend_df)
+dividend_df.to_csv('dividend_table.csv', index= False)
 '''
 msft = yf.Ticker("MSFT")
 #print(msft.info)
