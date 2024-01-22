@@ -4,6 +4,7 @@ from get_all_tickers.get_tickers import Region
 import pandas as pd
 from datetime import datetime
 from IPython.display import display
+import time
 '''
 msft = yf.Ticker("MSFT")
 
@@ -39,7 +40,8 @@ msft.quarterly_cashflow
 # show news
 msft.news
 '''
-df = pd.read_csv('ticker_list')
+start_time = time.time()
+df = pd.read_csv('ticker_list.csv')
 list_of_tickers = list(df['Tickers'])
 
 all_tickers = yf.Tickers(list_of_tickers)
@@ -79,6 +81,7 @@ for i in list_of_tickers:
 print('final df is: ', dividend_df)
 display(dividend_df)
 dividend_df.to_csv('dividend_table.csv', index= False)
+print("--- %s seconds ---" % (time.time() - start_time))
 '''
 msft = yf.Ticker("MSFT")
 #print(msft.info)
